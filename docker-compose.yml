@@ -13,11 +13,14 @@ services:
       - app-network
   php:
     build:
+      args:
+        user: dev
+        uid: 1000
       context: .
       dockerfile: Dockerfile
     container_name: php_app
     volumes:
-      - ./src:/var/www/html/app
+      - ./src:/var/www/app
     expose:
       - "9000"
     networks:

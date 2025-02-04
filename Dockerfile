@@ -1,6 +1,9 @@
 # Use the official PHP image with FPM
 FROM php:8.2-fpm
-# Install common php extension dependencies
+
+ARG user
+ARG uid
+
 RUN apt-get update && apt-get install -y \
     libfreetype-dev \
     libsqlite3-dev \
@@ -15,20 +18,13 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install zip
 
-# Set the working directory
-COPY ./src /var/www/app
-WORKDIR /var/www/app
-
-RUN chown -R www-data:www-data /var/www/app \
-    && chmod -R 775 /var/www/app/storage
-
-
 # install composer
-COPY --from=composer:2.6.5 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-# copy composer.json to workdir & install dependencies
-COPY ./src/composer.json ./
-RUN composer install
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
+WORKDIR /var/www/app
+USER $user
 
-# Set the default command to run php-fpm
 CMD ["php-fpm"]
