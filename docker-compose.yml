@@ -25,17 +25,17 @@ services:
       - "9000"
     networks:
       - app-network
-  mosquitto:
+  mosquitto-server:
     image: eclipse-mosquitto
-    hostname: mosquitto
-    container_name: mosquitto
+    container_name: mosquitto-server
     restart: unless-stopped
+    volumes:
+      - ./mosquitto/config:/mosquitto/config  # Mount custom config file
+      - ./mosquitto/data:/mosquitto/data      # Persist data
+      - ./mosquitto/log:/mosquitto/log        # Persist logs
     ports:
       - "1883:1883"
       - "9001:9001"
-    volumes:
-      - ./mosquitto:/etc/mosquitto
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
     networks:
       - app-network
 networks:
