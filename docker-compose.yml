@@ -1,6 +1,7 @@
 services:
   nginx:
     image: nginx:latest
+    restart: unless-stopped
     container_name: nginx_server
     ports:
       - "8080:80"
@@ -12,6 +13,7 @@ services:
     networks:
       - app-network
   php:
+    restart: unless-stopped
     build:
       args:
         user: dev
