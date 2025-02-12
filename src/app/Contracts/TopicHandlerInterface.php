@@ -5,5 +5,5 @@ use App\Models\Measurement;
 
 interface TopicHandlerInterface
 {
-    public function save(array $message): Measurement;
+    public function save(array $message): Measurement|array;
 }
