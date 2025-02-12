@@ -10,6 +10,7 @@ class AirHandler implements TopicHandlerInterface
 {
     public function save(array $message): array
     {
+
         return [
             Measurement::create([
                 'node_id' => $message['node_id'],
