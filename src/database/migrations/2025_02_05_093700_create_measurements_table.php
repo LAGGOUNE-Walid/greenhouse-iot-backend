@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\Node;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('measurements', function (Blueprint $table) {
             $table->id();
-           $table->foreignIdFor(Node::class);
+            $table->foreignIdFor(Node::class);
             $table->integer('measurement_type');
             $table->double('value');
             $table->timestamps();

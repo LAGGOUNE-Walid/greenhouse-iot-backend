@@ -6,9 +6,6 @@ use App\Events\MqttAirMessageReceived;
 use App\Events\MqttSoilMessageReceived;
 use App\Mqtt\Factory\AirHandlerFactory;
 use App\Mqtt\Factory\SoilHandlerFactory;
-use Illuminate\Queue\InteractsWithQueue;
-use App\Mqtt\Handlers\SoilMoistureHandler;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MessageReceivedListener
 {

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Events\MqttSoilMessageReceived;
 use Illuminate\Console\Command;
 use PhpMqtt\Client\Facades\MQTT;
-use App\Events\MqttSoilMessageReceived;
 
 class MqttSubscribeSoil extends Command
 {
@@ -28,7 +28,7 @@ class MqttSubscribeSoil extends Command
     public function handle()
     {
         $mqtt = MQTT::connection();
-        $mqtt->subscribe(config("mqtt-client.connections.default.soil_channel"), function (string $topic, string $message) {
+        $mqtt->subscribe(config('mqtt-client.connections.default.soil_channel'), function (string $topic, string $message) {
             MqttSoilMessageReceived::dispatch($message);
         }, 1);
         $mqtt->loop(true);

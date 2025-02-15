@@ -1,9 +1,8 @@
-<?php 
-namespace App\Contracts;
+<?php
 
-use App\Models\Measurement;
+namespace App\Contracts;
 
 interface TopicHandlerInterface
 {
-    public function save(array $message): Measurement|array;
+    public function save(MqttMessage $message): bool;
 }

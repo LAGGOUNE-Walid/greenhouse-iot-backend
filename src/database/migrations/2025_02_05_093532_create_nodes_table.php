@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nodes', function (Blueprint $table) {
-            $table->id();
-            $table->macAddress("mac_address");
-            $table->ipAddress("ip_address");
-            $table->string("type")->nullable();
+            $table->bigInteger('id');
+            $table->string('type');
             $table->timestamps();
         });
     }

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Events\MqttAirMessageReceived;
 use Illuminate\Console\Command;
 use PhpMqtt\Client\Facades\MQTT;
-use App\Events\MqttAirMessageReceived;
 
 class MqttSubscribeAir extends Command
 {
@@ -28,7 +28,7 @@ class MqttSubscribeAir extends Command
     public function handle()
     {
         $mqtt = MQTT::connection();
-        $mqtt->subscribe(config("mqtt-client.connections.default.air_channel"), function (string $topic, string $message) {
+        $mqtt->subscribe(config('mqtt-client.connections.default.air_channel'), function (string $topic, string $message) {
             MqttAirMessageReceived::dispatch($message);
         }, 1);
         $mqtt->loop(true);
