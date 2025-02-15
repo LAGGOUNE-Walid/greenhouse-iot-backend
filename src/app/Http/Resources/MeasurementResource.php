@@ -14,7 +14,7 @@ class MeasurementResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if (! $this) {
+        if ($this?->id === null) {
             return [];
         }
         return [
