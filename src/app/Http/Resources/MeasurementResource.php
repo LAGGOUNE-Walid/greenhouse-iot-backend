@@ -14,8 +14,14 @@ class MeasurementResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if ($this?->id === null) {
-            return [];
+        if (! property_exists($this, "id")) {
+            return [
+                'id' => null,
+                'value' => null,
+                'measurement_type' => null,
+                'measurement_type_string' => null,
+                'created_at' => null,
+            ];
         }
         return [
             'id' => $this->id,
