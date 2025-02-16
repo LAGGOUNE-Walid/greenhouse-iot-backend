@@ -15,11 +15,11 @@ class MeasurementResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'value' => $this->value,
-            'measurement_type' => $this->measurement_type,
-            'measurement_type_string' => $this->measurement_type->name,
-            'created_at' => $this->created_at->format("H:i:s")
+            'id' => $this->id ?? null,
+            'value' => $this->value ?? null,
+            'measurement_type' => $this->measurement_type ?? null,
+            'measurement_type_string' => $this->measurement_type->name ?? null,
+            'created_at' => isset($this->created_at) ? $this->created_at->format("H:i:s") : null
         ];
     }
 }

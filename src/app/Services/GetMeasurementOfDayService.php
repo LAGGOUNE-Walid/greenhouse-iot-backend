@@ -67,16 +67,16 @@ class GetMeasurementOfDayService
         $measurements = collect([]);
 
         $lastSoil = Measurement::where('measurement_type', MeasurementType::soil_moisture)->latest('created_at')->first();
-        $measurements->put(MeasurementType::soil_moisture->name, ($lastSoil) ? new MeasurementResource($lastSoil) : null);
+        $measurements->put(MeasurementType::soil_moisture->name, new MeasurementResource($lastSoil));
 
         $lastTemperature = Measurement::where('measurement_type', MeasurementType::temperature)->latest('created_at')->first();
-        $measurements->put(MeasurementType::temperature->name, ($lastTemperature) ? new MeasurementResource($lastTemperature) : null);
+        $measurements->put(MeasurementType::temperature->name, new MeasurementResource($lastTemperature));
 
         $lastHumidity = Measurement::where('measurement_type', MeasurementType::humidity)->latest('created_at')->first();
-        $measurements->put(MeasurementType::humidity->name, ($lastHumidity) ? new MeasurementResource($lastHumidity) : null);
+        $measurements->put(MeasurementType::humidity->name, new MeasurementResource($lastHumidity));
 
         $lastPressure = Measurement::where('measurement_type', MeasurementType::pressure)->latest('created_at')->first();
-        $measurements->put(MeasurementType::pressure->name, ($lastPressure) ? new MeasurementResource($lastPressure) : null);
+        $measurements->put(MeasurementType::pressure->name, new MeasurementResource($lastPressure));
 
         return $measurements;
     }
