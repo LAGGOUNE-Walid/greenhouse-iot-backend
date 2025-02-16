@@ -13,7 +13,12 @@ class MqttSoilMessage implements MqttMessage
     {
         $elequentArray = [];
         foreach ($this->soilMeasurements as $value) {
-            $elequentArray[] = ['node_id' => $this->nodeId, 'value' => $value, 'measurement_type' => MeasurementType::soil_moisture];
+            $elequentArray[] = [
+                'node_id' => $this->nodeId, 
+                'value' => $value, 
+                'measurement_type' => MeasurementType::soil_moisture,
+                'created_at' => now()
+            ];
         }
 
         return $elequentArray;
