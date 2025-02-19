@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\GetMeasurementOfDayService;
+use App\Exports\MeasurementExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Services\GetMeasurementOfDayService;
 
 class MeasurementController extends Controller
 {
@@ -15,6 +17,11 @@ class MeasurementController extends Controller
     public function index(Request $request)
     {
         return ['data' => $this->getMeasurementOfDayService->get($request)];
+    }
+
+    public function export()
+    {
+        return Excel::download(new MeasurementExport, 'data-'.now().'.xlsx');
     }
 
     /**
