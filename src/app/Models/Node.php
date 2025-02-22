@@ -16,15 +16,22 @@ class Node extends Model
         'type',
     ];
 
-    public function measurements(): HasMany
-    {
-        return $this->hasMany(Measurement::class);
-    }
-
     protected function casts(): array
     {
         return [
             'type' => NodeType::class,
         ];
     }
+
+
+    public function measurements(): HasMany
+    {
+        return $this->hasMany(Measurement::class);
+    }
+
+    public function batteryLevels(): HasMany
+    {
+        return $this->hasMany(BatteryLevel::class);
+    }
+
 }

@@ -14,11 +14,11 @@ class MeasurementExport implements FromQuery, WithMapping, WithHeadings
     public function headings(): array
     {
         return [
+            'datetime',
             '#',
             'node',
             'value',
             'type',
-            'datetime'
         ];
     }
 

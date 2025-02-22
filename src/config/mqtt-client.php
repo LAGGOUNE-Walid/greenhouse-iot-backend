@@ -35,6 +35,7 @@ return [
         'default' => [
             'soil_channel' => env('MQTT_SOIL_CHANNEL'),
             'air_channel' => env('MQTT_AIR_CHANNEL'),
+            'battery_channel' => env('MQTT_BATTERY_CHANNEL'),
             // The host and port to which the client shall connect.
             'host' => env('MQTT_HOST'),
             'port' => env('MQTT_PORT', 1883),
