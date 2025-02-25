@@ -28,3 +28,21 @@ Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
     return response()->noContent();
 });
+Route::post("image", function (Request $request) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $fileContent = file_get_contents("php://input");
+        $filePath = public_path("uploads/"). time() . ".jpg"; // Save with a timestamp
+    
+        if (file_put_contents($filePath, $fileContent)) {
+            echo "Image uploaded successfully: " . $filePath;
+        } else {
+            echo "Failed to save image";
+        }
+    } else {
+        echo "Invalid request";
+    }
+
+    return response()->json([
+        'message' => 'Image uploaded successfully!',
+    ]);
+});
