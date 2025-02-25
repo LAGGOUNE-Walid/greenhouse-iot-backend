@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     build:
       args:
-        user: dev
+        user: www-data
         uid: 1000
       context: .
       dockerfile: Dockerfile

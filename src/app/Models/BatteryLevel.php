@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class BatteryLevel extends Model
 {
-    protected $fillable = ['value'];
+    protected $fillable = ['node_id', 'value'];
 }

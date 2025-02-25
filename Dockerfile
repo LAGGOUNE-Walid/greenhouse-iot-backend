@@ -21,10 +21,13 @@ RUN apt-get update && apt-get install -y \
 # install composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
-WORKDIR /var/www/app
-USER $user
+# RUN useradd -G www-data,root -u $uid -d /home/$user $user
+# RUN mkdir -p /home/$user/.composer && \
+#     chown -R $user:$user /home/$user
+USER www-data
+WORKDIR /var/www/html/app
+RUN chown -R www-data:www-data /var/www/html/app
+# USER $user
+
 
 CMD ["php-fpm"]

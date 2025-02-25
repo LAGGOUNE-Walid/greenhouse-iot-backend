@@ -2,28 +2,34 @@
 
 namespace App\Mqtt\Factory;
 
+use Exception;
+use App\Models\Node;
+use App\Enums\NodeType;
+use App\Mqtt\Handlers\AirHandler;
 use App\Contracts\TopicHandlerInterface;
 use App\DataTransferObject\MqttAirMessage;
-use App\DataTransferObject\MqttSoilMessage;
-use App\Enums\NodeType;
-use App\Models\Node;
-use App\Mqtt\Handlers\AirHandler;
+use App\DataTransferObject\MqttBatteryMessage;
 use App\Mqtt\Handlers\SoilMoistureHandler;
-use Exception;
+use App\DataTransferObject\MqttSoilMessage;
+use App\Mqtt\Factory\BatteryLevelHandlerFactory;
 
 abstract class MqttEventHandlerFactory
 {
     abstract public function getHandler(): TopicHandlerInterface;
 
-    abstract public function getNodeType(): NodeType;
+    abstract public function getNodeType(): ?NodeType;
 
     public function handle(array $message): bool
     {
-        $hanlder = $this->getHandler();
+        $handler = $this->getHandler();
         $nodeId = $message['node_id'];
         unset($message['node_id']);
 
-        if ($hanlder instanceof AirHandler) {
+        if ($handler instanceof BatteryLevelHandlerFactory and $this->nodeExists($nodeId)) {
+            return $handler->save(new MqttBatteryMessage($nodeId, $message['batteryLevel']));
+        }
+
+        if ($handler instanceof AirHandler) {
             try {
                 $message = new MqttAirMessage($nodeId, $message['temperature'], $message['humidity'], $message['pressure']);
             } catch (\Throwable $th) {
@@ -31,7 +37,7 @@ abstract class MqttEventHandlerFactory
             }
         }
 
-        if ($hanlder instanceof SoilMoistureHandler) {
+        if ($handler instanceof SoilMoistureHandler) {
             try {
                 if (count($message) === 0) {
                     throw new Exception;
@@ -50,5 +56,10 @@ abstract class MqttEventHandlerFactory
     public function createNodeIfNotExists(int $nodeId, NodeType $nodeType): Node
     {
         return Node::firstOrCreate(['id' => $nodeId, 'type' => $nodeType]);
+    }
+
+    public function nodeExists(int $nodeId): ?Node
+    {
+        return Node::where('id', $nodeId)->first();
     }
 }
