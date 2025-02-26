@@ -12,6 +12,7 @@ use App\DataTransferObject\MqttBatteryMessage;
 use App\Mqtt\Handlers\SoilMoistureHandler;
 use App\DataTransferObject\MqttSoilMessage;
 use App\Mqtt\Factory\BatteryLevelHandlerFactory;
+use App\Mqtt\Handlers\BatteryHandler;
 
 abstract class MqttEventHandlerFactory
 {
@@ -25,7 +26,7 @@ abstract class MqttEventHandlerFactory
         $nodeId = $message['node_id'];
         unset($message['node_id']);
 
-        if ($handler instanceof BatteryLevelHandlerFactory and $this->nodeExists($nodeId)) {
+        if ($handler instanceof BatteryHandler and $this->nodeExists($nodeId)) {
             return $handler->save(new MqttBatteryMessage($nodeId, $message['batteryLevel']));
         }
 

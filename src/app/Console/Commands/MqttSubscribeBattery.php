@@ -29,7 +29,8 @@ class MqttSubscribeBattery extends Command
     {
         $mqtt = MQTT::connection();
         $mqtt->subscribe(config('mqtt-client.connections.default.battery_channel'), function (string $topic, string $message) {
-            // {'nodeId' : 1, 'batteryLevel' : 0.32}
+            // {'node_id' : 1, 'batteryLevel' : 0.32} 
+            //
             MqttBatteryMessageReceived::dispatch($message);
         }, 1);
         $mqtt->loop(true);
