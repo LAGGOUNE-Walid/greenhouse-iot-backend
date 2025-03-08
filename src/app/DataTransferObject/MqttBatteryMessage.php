@@ -12,7 +12,7 @@ class MqttBatteryMessage implements MqttMessage
     {
         return [
             'node_id' => $this->nodeId,
-            'level' => $this->batteryLevel
+            'value' => $this->batteryLevel
         ];
     }
 }
