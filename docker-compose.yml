@@ -27,6 +27,48 @@ services:
       - "9000"
     networks:
       - app-network
+  air-subs:
+    restart: unless-stopped
+    build:
+      args:
+        user: www-data
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    container_name: air-subs
+    volumes:
+      - ./src:/var/www/app
+    command: ["php", "/var/www/app/artisan", "app:mqtt-subscribe-air"]
+    networks:
+      - app-network
+  soil-subs:
+    restart: unless-stopped
+    build:
+      args:
+        user: www-data
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    container_name: soil-subs
+    volumes:
+      - ./src:/var/www/app
+    command: ["php", "/var/www/app/artisan", "app:mqtt-subscribe-soil"]
+    networks:
+      - app-network
+  battery-subs:
+    restart: unless-stopped
+    build:
+      args:
+        user: www-data
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    container_name: battery-subs
+    volumes:
+      - ./src:/var/www/app
+    command: ["php", "/var/www/app/artisan", "app:mqtt-subscribe-battery"]
+    networks:
+      - app-network
   mosquitto-server:
     image: eclipse-mosquitto
     container_name: mosquitto-server
