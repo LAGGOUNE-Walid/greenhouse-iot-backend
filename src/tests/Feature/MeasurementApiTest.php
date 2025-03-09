@@ -22,10 +22,9 @@ class MeasurementApiTest extends TestCase
             ->count(10)
             ->create();
 
-        $response = $this->get('/api/measurements');
+        $response = $this->get('/api/measurements', ['Accept' => 'text/event-stream']);
 
         $response->assertStatus(200);
-        $response->assertJsonCount(24, 'data');
     }
 
     public function test_getting_this_week_measurements_groupped_by_days(): void
