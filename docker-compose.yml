@@ -13,20 +13,20 @@ services:
     networks:
       - app-network
   php:
+    user: "1000:1000" 
     restart: unless-stopped
     build:
-      args:
-        user: www-data
-        uid: 1000
       context: .
       dockerfile: Dockerfile
     container_name: php_app
     volumes:
-      - ./src:/var/www/app
+      - ./src:/var/www/html/app
     expose:
       - "9000"
     networks:
       - app-network
+    depends_on:
+      - mosquitto-server
   air-subs:
     restart: unless-stopped
     build:
@@ -41,6 +41,8 @@ services:
     command: ["php", "/var/www/app/artisan", "app:mqtt-subscribe-air"]
     networks:
       - app-network
+    depends_on:
+      - mosquitto-server
   soil-subs:
     restart: unless-stopped
     build:
@@ -55,6 +57,8 @@ services:
     command: ["php", "/var/www/app/artisan", "app:mqtt-subscribe-soil"]
     networks:
       - app-network
+    depends_on:
+      - mosquitto-server
   battery-subs:
     restart: unless-stopped
     build:
@@ -69,6 +73,8 @@ services:
     command: ["php", "/var/www/app/artisan", "app:mqtt-subscribe-battery"]
     networks:
       - app-network
+    depends_on:
+      - mosquitto-server
   mosquitto-server:
     image: eclipse-mosquitto
     container_name: mosquitto-server

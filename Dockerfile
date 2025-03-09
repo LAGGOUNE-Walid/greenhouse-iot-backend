@@ -1,9 +1,6 @@
 # Use the official PHP image with FPM
 FROM php:8.2-fpm
 
-ARG user
-ARG uid
-
 RUN apt-get update && apt-get install -y \
     libfreetype-dev \
     libsqlite3-dev \
@@ -24,9 +21,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 # RUN useradd -G www-data,root -u $uid -d /home/$user $user
 # RUN mkdir -p /home/$user/.composer && \
 #     chown -R $user:$user /home/$user
-USER www-data
 WORKDIR /var/www/html/app
-RUN chown -R www-data:www-data /var/www/html/app
+RUN chown -R 1000:1000 /var/www/html/app
 # USER $user
 
 

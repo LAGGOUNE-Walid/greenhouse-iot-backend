@@ -1,3 +1,4 @@
+.tinker/
 /storage/logs/*
 /storage/framework/cache/*
 /storage/framework/sessions/*
