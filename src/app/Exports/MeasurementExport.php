@@ -4,13 +4,11 @@ namespace App\Exports;
 
 use App\Models\Measurement;
 use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class MeasurementExport implements FromQuery, WithMapping, WithHeadings
+class MeasurementExport implements FromQuery, WithHeadings, WithMapping
 {
-
     public function headings(): array
     {
         return [
@@ -25,11 +23,11 @@ class MeasurementExport implements FromQuery, WithMapping, WithHeadings
     public function map($measurement): array
     {
         return [
-            $measurement->created_at->format("Y-m-d H:i:s"),
+            $measurement->created_at->format('Y-m-d H:i:s'),
             $measurement->id,
             $measurement->node_id,
             $measurement->value,
-            $measurement->measurement_type->name,            
+            $measurement->measurement_type->name,
         ];
     }
 

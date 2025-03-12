@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Exports\MeasurementExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Services\GetMeasurementOfDayService;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -16,8 +16,12 @@ class MeasurementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): StreamedResponse
+    public function index(Request $request): StreamedResponse|array
     {
+        if ($request->has('static')) {
+            return ['data' => $this->getMeasurementOfDayService->get($request)];
+        }
+
         return $this->sseResponse(function () use ($request) {
             return $this->getMeasurementOfDayService->get($request);
         });
@@ -25,7 +29,7 @@ class MeasurementController extends Controller
 
     public function export(): BinaryFileResponse
     {
-        return Excel::download(new MeasurementExport, 'data-' . now() . '.xlsx');
+        return Excel::download(new MeasurementExport, 'data-'.now().'.xlsx');
     }
 
     /**

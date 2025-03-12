@@ -23,7 +23,6 @@ class Node extends Model
         ];
     }
 
-
     public function measurements(): HasMany
     {
         return $this->hasMany(Measurement::class);
@@ -33,5 +32,4 @@ class Node extends Model
     {
         return $this->hasMany(BatteryLevel::class);
     }
-
 }

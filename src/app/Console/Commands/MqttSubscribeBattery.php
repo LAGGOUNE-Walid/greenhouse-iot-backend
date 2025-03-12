@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Events\MqttBatteryMessageReceived;
 use Illuminate\Console\Command;
 use PhpMqtt\Client\Facades\MQTT;
-use App\Events\MqttBatteryMessageReceived;
 
 class MqttSubscribeBattery extends Command
 {
@@ -29,7 +29,7 @@ class MqttSubscribeBattery extends Command
     {
         $mqtt = MQTT::connection();
         $mqtt->subscribe(config('mqtt-client.connections.default.battery_channel'), function (string $topic, string $message) {
-            // {'node_id' : 1, 'batteryLevel' : 0.32} 
+            // {'node_id' : 1, 'batteryLevel' : 0.32}
             //
             MqttBatteryMessageReceived::dispatch($message);
         }, 1);

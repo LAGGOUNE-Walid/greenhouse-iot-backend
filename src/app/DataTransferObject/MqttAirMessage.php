@@ -21,19 +21,19 @@ class MqttAirMessage implements MqttMessage
                 'node_id' => $this->nodeId,
                 'measurement_type' => MeasurementType::temperature,
                 'value' => $this->temperature,
-                'created_at' => now()
+                'created_at' => now(),
             ],
             [
                 'node_id' => $this->nodeId,
                 'measurement_type' => MeasurementType::humidity,
                 'value' => $this->humidity,
-                'created_at' => now()
+                'created_at' => now(),
             ],
             [
                 'node_id' => $this->nodeId,
                 'measurement_type' => MeasurementType::pressure,
                 'value' => $this->pressure,
-                'created_at' => now()
+                'created_at' => now(),
             ],
         ];
     }

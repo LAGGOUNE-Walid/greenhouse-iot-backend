@@ -11,7 +11,7 @@ abstract class Controller
         $response = new StreamedResponse(function () use ($handler) {
             while (true) {
                 $data = ['data' => call_user_func($handler)];
-                echo "data: " . json_encode($data) . "\n\n";
+                echo 'data: '.json_encode($data)."\n\n";
 
                 if (ob_get_contents()) {
                     ob_end_flush();
@@ -29,6 +29,7 @@ abstract class Controller
         $response->headers->set('Connection', 'keep-alive');
         $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('X-Accel-Buffering', 'no');
+
         return $response;
     }
 }

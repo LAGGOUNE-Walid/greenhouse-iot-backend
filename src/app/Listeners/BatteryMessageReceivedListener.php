@@ -2,10 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Mqtt\Handlers\BatteryHandler;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Events\MqttBatteryMessageReceived;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Mqtt\Factory\BatteryLevelHandlerFactory;
 
 class BatteryMessageReceivedListener
@@ -14,9 +11,8 @@ class BatteryMessageReceivedListener
      * Create the event listener.
      */
     public function __construct(
-        
-    )
-    {
+
+    ) {
         //
     }
 

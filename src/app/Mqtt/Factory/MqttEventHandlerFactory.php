@@ -2,17 +2,16 @@
 
 namespace App\Mqtt\Factory;
 
-use Exception;
-use App\Models\Node;
-use App\Enums\NodeType;
-use App\Mqtt\Handlers\AirHandler;
 use App\Contracts\TopicHandlerInterface;
 use App\DataTransferObject\MqttAirMessage;
 use App\DataTransferObject\MqttBatteryMessage;
-use App\Mqtt\Handlers\SoilMoistureHandler;
 use App\DataTransferObject\MqttSoilMessage;
-use App\Mqtt\Factory\BatteryLevelHandlerFactory;
+use App\Enums\NodeType;
+use App\Models\Node;
+use App\Mqtt\Handlers\AirHandler;
 use App\Mqtt\Handlers\BatteryHandler;
+use App\Mqtt\Handlers\SoilMoistureHandler;
+use Exception;
 
 abstract class MqttEventHandlerFactory
 {
