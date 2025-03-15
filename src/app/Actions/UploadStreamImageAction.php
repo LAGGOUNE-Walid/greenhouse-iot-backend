@@ -9,11 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UploadStreamImageAction
 {
-
     public function execute(string $fileContent): JsonResponse
     {
-        $fileName = time() . ".jpg";
-        $filePath = "uploads/" . $fileName;
+        $fileName = time().'.jpg';
+        $filePath = 'uploads/'.$fileName;
 
         $tempFile = tmpfile();
         fwrite($tempFile, $fileContent);
@@ -34,6 +33,7 @@ class UploadStreamImageAction
 
         if ($validator->fails()) {
             fclose($tempFile);
+
             return response()->json([
                 'message' => 'Invalid image file!',
                 'errors' => $validator->errors(),
@@ -42,16 +42,17 @@ class UploadStreamImageAction
 
         if (Storage::disk('public')->put($filePath, $fileContent)) {
             fclose($tempFile);
+
             return response()->json([
                 'message' => 'Image uploaded successfully!',
-                'path' => asset("storage/".$filePath)
+                'path' => asset('storage/'.$filePath),
             ]);
         }
 
         fclose($tempFile);
+
         return response()->json([
             'message' => 'Failed to upload!',
         ], 500);
     }
-
 }

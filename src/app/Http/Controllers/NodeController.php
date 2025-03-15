@@ -10,10 +10,14 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class NodeController extends Controller
 {
-    public function index(): StreamedResponse
+    public function index(Request $request): StreamedResponse|AnonymousResourceCollection
     {
-        return $this->sseResponse(function() {
-            return NodeResource::collection(Node::with(['batteryLevels', 'measurements'])->get()); 
+        if ($request->has('static')) {
+            return NodeResource::collection(Node::with(['batteryLevels', 'measurements'])->get());
+        }
+
+        return $this->sseResponse(function () {
+            return NodeResource::collection(Node::with(['batteryLevels', 'measurements'])->get());
         });
     }
 }

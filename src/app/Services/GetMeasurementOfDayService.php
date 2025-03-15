@@ -34,6 +34,7 @@ class GetMeasurementOfDayService
         foreach ($dates as $date) {
             $datesMeasurements[$date->format('Y-m-d')] = $measurements->where('created_day', $date->format('d'))->map(function (Measurement $m) {
                 $m->measurement_type_string = $m->measurement_type->name;
+
                 return $m;
             });
         }
@@ -53,8 +54,9 @@ class GetMeasurementOfDayService
             if ($i < 10) {
                 $hour = "0$hour";
             }
-            $dayHours[$hour . "h"] = $todayMeasurements->where('created_hour', $hour)->map(function (Measurement $m) {
+            $dayHours[$hour.'h'] = $todayMeasurements->where('created_hour', $hour)->map(function (Measurement $m) {
                 $m->measurement_type_string = $m->measurement_type->name;
+
                 return $m;
             });
         }

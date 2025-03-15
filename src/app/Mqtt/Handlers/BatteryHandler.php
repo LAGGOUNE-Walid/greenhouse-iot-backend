@@ -2,7 +2,6 @@
 
 namespace App\Mqtt\Handlers;
 
-use App\Models\Measurement;
 use App\Contracts\MqttMessage;
 use App\Contracts\TopicHandlerInterface;
 use App\Models\BatteryLevel;
