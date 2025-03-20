@@ -57,6 +57,8 @@ This will start all required services: **Laravel app, Mosquitto MQTT broker, and
 ## 📖 API Documentation
 The API documentation is published via Postman. [View the collection here](https://laggoune-walid.postman.co/workspace/Daymain-Algo~0fb5ca51-9f21-4588-8e88-e729a4bc552c/collection/4963743-6d1ed869-7bd3-4fd7-93e0-673f61b4850f?action=share&creator=4963743&active-environment=4963743-89b01fc2-b5c4-46a4-90e4-7066d06404ea).
 
+OR [Open api docs](https://github.com/LAGGOUNE-Walid/greenhouse-iot-backend/blob/main/src/storage/app/private/scribe/openapi.yaml)
+
 ## 🤝 Contributing
 We welcome contributions! Feel free to submit a pull request or open an issue.
 
