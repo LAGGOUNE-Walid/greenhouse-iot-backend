@@ -13,8 +13,18 @@ class MeasurementController extends Controller
 {
     public function __construct(public GetMeasurementOfDayService $getMeasurementOfDayService) {}
 
+
     /**
-     * Display a listing of the resource.
+     * @group Measurements
+     *
+     * Get measurements streamed response using server sent event.
+     * Or get measurements in simple http json response
+     *
+     * @queryParam static when passing this query parameter with any value the response will be json response otherwise streamed response will return 
+     * @queryParam interval the retention periode , -1 to get last measurements, 0 to get today measurements, N and 0 < N <= 31 to get last N days measurements
+     * @response 200 data: {} scenario="Streamed response"
+     * @response 200 {} scenario="JSON response"
+     * 
      */
     public function index(Request $request): StreamedResponse|array
     {
@@ -26,57 +36,15 @@ class MeasurementController extends Controller
             return $this->getMeasurementOfDayService->get($request);
         });
     }
-
+    /**
+     * @group Measurements
+     *
+     *  Export all measurements into .xlsx file
+     *
+     *  @responseFile 
+     */
     public function export(): BinaryFileResponse
     {
-        return Excel::download(new MeasurementExport, 'data-'.now().'.xlsx');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return Excel::download(new MeasurementExport, 'data-' . now() . '.xlsx');
     }
 }

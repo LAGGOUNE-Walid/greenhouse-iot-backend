@@ -1,0 +1,58 @@
+name: Nodes
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/nodes
+    metadata:
+      groupName: Nodes
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Get nodes streamed response using server sent event.
+        Or get nodes in simple http json response
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      static:
+        name: static
+        description: 'when passing this query parameter with any value the response will be json response otherwise streamed response will return'
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      static: consequatur
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"data":{"id":1867,"type":1,"type_name":"SOIL_NODE","last_battery_level":null,"last_measurement":null}}'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 200
+        content: 'data: {}'
+        headers: []
+        description: 'Streamed response'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

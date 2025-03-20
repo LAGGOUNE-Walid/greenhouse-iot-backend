@@ -1,0 +1,113 @@
+name: Measurements
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/measurements
+    metadata:
+      groupName: Measurements
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Get measurements streamed response using server sent event.
+        Or get measurements in simple http json response
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      static:
+        name: static
+        description: 'when passing this query parameter with any value the response will be json response otherwise streamed response will return'
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      interval:
+        name: interval
+        description: 'the retention periode , -1 to get last measurements, 0 to get today measurements, N and 0 < N <= 31 to get last N days measurements'
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      static: consequatur
+      interval: consequatur
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: 'data: {}'
+        headers: []
+        description: 'Streamed response'
+        custom: []
+      -
+        status: 200
+        content: '{}'
+        headers: []
+        description: 'JSON response'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/measurements-export
+    metadata:
+      groupName: Measurements
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Export all measurements into .xlsx file
+
+         @responseFile
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: ''
+        headers:
+          cache-control: public
+          content-disposition: 'attachment; filename="data-2025-03-20 20:57:34.xlsx"'
+          content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+          accept-ranges: bytes
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

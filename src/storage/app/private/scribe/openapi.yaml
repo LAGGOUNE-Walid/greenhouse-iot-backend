@@ -1,0 +1,225 @@
+openapi: 3.0.3
+info:
+  title: 'GreenhouseBackend API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8080'
+tags:
+  -
+    name: Endpoints
+    description: ''
+  -
+    name: Image
+    description: ''
+  -
+    name: Measurements
+    description: ''
+  -
+    name: Nodes
+    description: ''
+paths:
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/login:
+    post:
+      summary: ''
+      operationId: postApiLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/logout:
+    post:
+      summary: ''
+      operationId: postApiLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/image:
+    post:
+      summary: 'Send and store raw binary image'
+      operationId: sendAndStoreRawBinaryImage
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: 'Image uploaded'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Image uploaded successfully!'
+                  path: /storage/uploads/IMG_NAME.jpg
+                properties:
+                  message:
+                    type: string
+                    example: 'Image uploaded successfully!'
+                  path:
+                    type: string
+                    example: /storage/uploads/IMG_NAME.jpg
+        422:
+          description: 'Validation failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid image file!'
+                  errors:
+                    file:
+                      - 'The file field must be an image.'
+                      - 'The file field must be a file of type: jpeg, png, jpg, gif.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid image file!'
+                  errors:
+                    type: object
+                    properties:
+                      file:
+                        type: array
+                        example:
+                          - 'The file field must be an image.'
+                          - 'The file field must be a file of type: jpeg, png, jpg, gif.'
+                        items:
+                          type: string
+      tags:
+        - Image
+      security: []
+  /api/measurements:
+    get:
+      summary: "Get measurements streamed response using server sent event.\nOr get measurements in simple http json response"
+      operationId: getMeasurementsStreamedResponseUsingServerSentEventOrGetMeasurementsInSimpleHttpJsonResponse
+      description: ''
+      parameters:
+        -
+          in: query
+          name: static
+          description: 'when passing this query parameter with any value the response will be json response otherwise streamed response will return'
+          example: consequatur
+          required: false
+          schema:
+            type: string
+            description: 'when passing this query parameter with any value the response will be json response otherwise streamed response will return'
+            example: consequatur
+            nullable: false
+        -
+          in: query
+          name: interval
+          description: 'the retention periode , -1 to get last measurements, 0 to get today measurements, N and 0 < N <= 31 to get last N days measurements'
+          example: consequatur
+          required: false
+          schema:
+            type: string
+            description: 'the retention periode , -1 to get last measurements, 0 to get today measurements, N and 0 < N <= 31 to get last N days measurements'
+            example: consequatur
+            nullable: false
+      responses:
+        200:
+          description: 'Streamed response'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'data: {}'
+      tags:
+        - Measurements
+      security: []
+  /api/measurements-export:
+    get:
+      summary: "Export all measurements into .xlsx file\n\n @responseFile"
+      operationId: exportAllMeasurementsIntoxlsxFileresponseFile
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Measurements
+      security: []
+  /api/nodes:
+    get:
+      summary: "Get nodes streamed response using server sent event.\nOr get nodes in simple http json response"
+      operationId: getNodesStreamedResponseUsingServerSentEventOrGetNodesInSimpleHttpJsonResponse
+      description: ''
+      parameters:
+        -
+          in: query
+          name: static
+          description: 'when passing this query parameter with any value the response will be json response otherwise streamed response will return'
+          example: consequatur
+          required: false
+          schema:
+            type: string
+            description: 'when passing this query parameter with any value the response will be json response otherwise streamed response will return'
+            example: consequatur
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: 1867
+                    type: 1
+                    type_name: SOIL_NODE
+                    last_battery_level: null
+                    last_measurement: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1867
+                      type:
+                        type: integer
+                        example: 1
+                      type_name:
+                        type: string
+                        example: SOIL_NODE
+                      last_battery_level:
+                        type: string
+                        example: null
+                      last_measurement:
+                        type: string
+                        example: null
+      tags:
+        - Nodes
+      security: []
