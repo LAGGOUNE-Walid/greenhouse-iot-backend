@@ -23,7 +23,7 @@ class MeasurementExport implements FromQuery, WithHeadings, WithMapping
     public function map($measurement): array
     {
         return [
-            $measurement->created_at->format('Y-m-d H:i:s'),
+            $measurement->created_at?->format('Y-m-d H:i:s'),
             $measurement->id,
             $measurement->node_id,
             $measurement->value,
