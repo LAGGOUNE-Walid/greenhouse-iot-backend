@@ -56,7 +56,6 @@ class GetMeasurementOfDayService
             }
             $dayHours[$hour.'h'] = $todayMeasurements->where('created_hour', $hour)->map(function (Measurement $m) {
                 $m->measurement_type_string = $m->measurement_type->name;
-
                 return $m;
             });
         }
