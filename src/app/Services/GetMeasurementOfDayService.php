@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
-use App\Enums\MeasurementType;
-use App\Http\Resources\MeasurementResource;
-use App\Models\Measurement;
 use Carbon\CarbonPeriod;
+use App\Models\Measurement;
 use Illuminate\Http\Request;
+use App\Enums\MeasurementType;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\MeasurementResource;
 
 class GetMeasurementOfDayService
 {
@@ -54,7 +55,7 @@ class GetMeasurementOfDayService
             if ($i < 10) {
                 $hour = "0$hour";
             }
-            $dayHours[$hour.'h'] = $todayMeasurements->where('created_hour', $hour)->map(function (Measurement $m) {
+            $dayHours[$hour . 'h'] = $todayMeasurements->where('created_hour', $hour)->map(function (Measurement $m) {
                 $m->measurement_type_string = $m->measurement_type->name;
                 return $m;
             });
@@ -67,8 +68,16 @@ class GetMeasurementOfDayService
     {
         $measurements = collect([]);
 
-        $lastSoil = Measurement::where('measurement_type', MeasurementType::soil_moisture)->latest('created_at')->first();
-        $measurements->put(MeasurementType::soil_moisture->name, new MeasurementResource($lastSoil));
+        $subquery = Measurement::select(DB::raw('MAX(id) as id'))
+            ->where('measurement_type', MeasurementType::soil_moisture)
+            ->groupBy('node_id');
+        $latestSoil = Measurement::whereIn('id', $subquery)
+            ->orderBy('created_at', 'desc')
+            ->latest("created_at")
+            ->get();
+
+        // $measurements->put(MeasurementType::soil_moisture->name, new MeasurementResource($lastSoil));
+        $measurements->put(MeasurementType::soil_moisture->name, MeasurementResource::collection($latestSoil));
 
         $lastTemperature = Measurement::where('measurement_type', MeasurementType::temperature)->latest('created_at')->first();
         $measurements->put(MeasurementType::temperature->name, new MeasurementResource($lastTemperature));
