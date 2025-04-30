@@ -18,7 +18,7 @@ class NodeResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'type_name' => $this->type->name,
-            'last_battery_level' => $this->batteryLevels->last(),
+            'last_battery_level' =>  max(0, min(100, $this->batteryLevels->last())),
             'last_measurement' => $this->measurements->last(),
         ];
     }
