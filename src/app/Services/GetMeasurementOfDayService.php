@@ -68,12 +68,12 @@ class GetMeasurementOfDayService
     {
         $measurements = collect([]);
 
-        $subquery = Measurement::select(DB::raw('MAX(id) as id'))
+        // $subquery = Measurement::select(DB::raw('MAX(id) as id'))
+        //     ->where('measurement_type', MeasurementType::soil_moisture)
+        //     ->groupBy('node_id');
+        $latestSoil = Measurement::orderBy('created_at', 'desc')
             ->where('measurement_type', MeasurementType::soil_moisture)
-            ->groupBy('node_id');
-        $latestSoil = Measurement::whereIn('id', $subquery)
-            ->orderBy('created_at', 'desc')
-            ->latest("created_at")
+            ->limit(5)
             ->get();
 
         // $measurements->put(MeasurementType::soil_moisture->name, new MeasurementResource($lastSoil));
