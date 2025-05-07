@@ -28,7 +28,7 @@ class GetMeasurementOfDayService
     {
         $measurements = Measurement::whereDate('created_at', '>=', now()->subDays($interval - 1))
             ->selectRaw('ROUND(AVG(value)) as avg_measuremens, strftime("%d", created_at) as created_day, measurement_type')
-            ->groupBy('measurement_type')
+            ->groupBy('measurement_type', 'created_day')
             ->get();
         $dates = CarbonPeriod::create(now()->subDays($interval - 1), '1 day', now());
         $datesMeasurements = [];
@@ -47,10 +47,10 @@ class GetMeasurementOfDayService
     {
         $todayMeasurements = Measurement::whereDate('created_at', '=', now())
             ->selectRaw('ROUND(AVG(value)) as avg_measuremens, strftime("%H", created_at) as created_hour, measurement_type')
-            ->groupBy('measurement_type')
+            ->groupBy('measurement_type', 'created_hour')
             ->get();
         $dayHours = [];
-        for ($i = 0; $i <= 23; $i++) {
+        for ($i = 0; $i <= now()->format("H"); $i++) {
             $hour = $i;
             if ($i < 10) {
                 $hour = "0$hour";
@@ -60,7 +60,6 @@ class GetMeasurementOfDayService
                 return $m;
             });
         }
-
         return collect($dayHours);
     }
 
@@ -68,15 +67,11 @@ class GetMeasurementOfDayService
     {
         $measurements = collect([]);
 
-        // $subquery = Measurement::select(DB::raw('MAX(id) as id'))
-        //     ->where('measurement_type', MeasurementType::soil_moisture)
-        //     ->groupBy('node_id');
         $latestSoil = Measurement::orderBy('created_at', 'desc')
             ->where('measurement_type', MeasurementType::soil_moisture)
             ->limit(5)
             ->get();
 
-        // $measurements->put(MeasurementType::soil_moisture->name, new MeasurementResource($lastSoil));
         $measurements->put(MeasurementType::soil_moisture->name, MeasurementResource::collection($latestSoil));
 
         $lastTemperature = Measurement::where('measurement_type', MeasurementType::temperature)->latest('created_at')->first();
