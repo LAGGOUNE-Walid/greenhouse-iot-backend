@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\MeasurementExport;
+use App\Http\Resources\MeasurementCollection;
+use App\Models\Measurement;
 use App\Services\GetMeasurementOfDayService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -47,4 +49,10 @@ class MeasurementController extends Controller
     {
         return Excel::download(new MeasurementExport, 'data-' . now() . '.xlsx');
     }
+
+    public function all(Request $request) : MeasurementCollection
+    {
+        return new MeasurementCollection(Measurement::orderByDesc("created_at")->paginate(12));
+    }
+
 }

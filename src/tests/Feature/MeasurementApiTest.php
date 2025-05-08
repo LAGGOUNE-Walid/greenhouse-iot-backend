@@ -28,7 +28,11 @@ class MeasurementApiTest extends TestCase
         $this->assertInstanceOf(StreamedResponse::class, $response->baseResponse);
         $response = $this->get('/api/measurements?static=1');
         $response->assertStatus(200);
-        $response->assertJsonCount(24, 'data');
+        $hourNow = now()->format("H");
+        if ($hourNow < 12) {
+            $hourNow = "0$hourNow"; 
+        }
+        $response->assertJsonCount(4, "data.{$hourNow}h");
     }
 
     public function test_getting_this_week_measurements_groupped_by_days(): void

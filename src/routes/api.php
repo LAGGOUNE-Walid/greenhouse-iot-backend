@@ -15,6 +15,7 @@ Route::resource('measurements', MeasurementController::class);
 Route::resource('nodes', NodeController::class);
 
 Route::get('measurements-export', [MeasurementController::class, 'export']);
+Route::get('measurements-table', [MeasurementController::class, 'all']);
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
