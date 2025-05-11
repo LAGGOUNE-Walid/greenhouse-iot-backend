@@ -53,7 +53,7 @@ class MeasurementController extends Controller
     public function all(Request $request) : MeasurementCollection
     {
         $measurements = Measurement::orderByDesc("created_at")->paginate(12);
-        $measurements->setPath("/api/api/measurements-table");
+        $measurements->setPath(config("APP_URL")."measurements-table");
         return new MeasurementCollection($measurements);
     }
 
