@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\MeasurementExport;
-use App\Http\Resources\MeasurementCollection;
 use App\Models\Measurement;
-use App\Services\GetMeasurementOfDayService;
 use Illuminate\Http\Request;
+use App\Exports\MeasurementExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Services\GetAllMeasurementsServices;
+use App\Services\GetMeasurementOfDayService;
+use App\Http\Resources\MeasurementCollection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class MeasurementController extends Controller
 {
-    public function __construct(public GetMeasurementOfDayService $getMeasurementOfDayService) {}
+    public function __construct(
+        public GetMeasurementOfDayService $getMeasurementOfDayService,
+        public GetAllMeasurementsServices $getAllMeasurementsServices
+        ) {}
 
 
     /**
@@ -31,6 +35,9 @@ class MeasurementController extends Controller
     public function index(Request $request): StreamedResponse|array
     {
         if ($request->has('static')) {
+            if ($request->has("all")) {
+                return ['data' => $this->getAllMeasurementsServices->get()];
+            }
             return ['data' => $this->getMeasurementOfDayService->get($request)];
         }
 
