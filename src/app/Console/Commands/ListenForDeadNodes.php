@@ -33,7 +33,7 @@ class ListenForDeadNodes extends Command
             if ($lastMeasurement->created_at->diffInMinutes(now()) >= 60) { //1h
                 $lastSend = $lastMeasurement->created_at->format('Y-m-d H:i:s');
                 $nodeType = $node->type->name;
-                Http::post('http://sms-api:5005/send-sms', [
+                Http::timeout(120)->post('http://sms-api:5005/send-sms', [
                     'phone' => '0557140049',
                     'message' => $nodeType." not sending data since ".$lastSend,
                 ]);
