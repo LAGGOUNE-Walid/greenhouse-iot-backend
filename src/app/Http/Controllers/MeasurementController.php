@@ -36,7 +36,7 @@ class MeasurementController extends Controller
     {
         if ($request->has('static')) {
             if ($request->has("all")) {
-                return ['data' => $this->getAllMeasurementsServices->get()];
+                return ['data' => $this->getAllMeasurementsServices->get($request->query('date', null))];
             }
             return ['data' => $this->getMeasurementOfDayService->get($request)];
         }
