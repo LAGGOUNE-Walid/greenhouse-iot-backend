@@ -28,15 +28,18 @@ class ListenForDeadNodes extends Command
     public function handle()
     {
         $nodes = Node::with('lastMeasurement')->get();
+        $contacts = explode(",", config('sms.contacts'));
         foreach ($nodes as $node) {
             $lastMeasurement = $node->lastMeasurement;
             if ($lastMeasurement->created_at->diffInMinutes(now()) >= 60) { //1h
                 $lastSend = $lastMeasurement->created_at->format('Y-m-d H:i:s');
                 $nodeType = $node->type->name;
-                Http::timeout(120)->post('http://sms-api:5005/send-sms', [
-                    'phone' => '0557140039',
-                    'message' => $nodeType." not sending data since ".$lastSend,
-                ]);
+                foreach ($contacts as $phone) {
+                    Http::timeout(120)->post('http://sms-api:5005/send-sms', [
+                        'phone' => '0557140039',
+                        'message' => $nodeType . " not sending data since " . $lastSend,
+                    ]);
+                }
             }
         }
     }
