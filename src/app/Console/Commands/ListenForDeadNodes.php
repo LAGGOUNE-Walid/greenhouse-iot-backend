@@ -34,7 +34,7 @@ class ListenForDeadNodes extends Command
                 $lastSend = $lastMeasurement->created_at->format('Y-m-d H:i:s');
                 $nodeType = $node->type->name;
                 Http::timeout(120)->post('http://sms-api:5005/send-sms', [
-                    'phone' => '0557140049',
+                    'phone' => '0557140039',
                     'message' => $nodeType." not sending data since ".$lastSend,
                 ]);
             }
