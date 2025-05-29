@@ -36,7 +36,7 @@ class ListenForDeadNodes extends Command
                 $nodeType = $node->type->name;
                 foreach ($contacts as $phone) {
                     Http::timeout(120)->post('http://sms-api:5005/send-sms', [
-                        'phone' => '0557140039',
+                        'phone' => $phone,
                         'message' => $nodeType . " not sending data since " . $lastSend,
                     ]);
                 }
