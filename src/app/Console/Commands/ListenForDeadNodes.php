@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Node;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class ListenForDeadNodes extends Command
 {
@@ -32,7 +33,10 @@ class ListenForDeadNodes extends Command
             if ($lastMeasurement->created_at->diffInMinutes(now()) >= 60) { //1h
                 $lastSend = $lastMeasurement->created_at->format('Y-m-d H:i:s');
                 $nodeType = $node->type->name;
-                exec("python3 /app/scripts/sms-sender.py 0557140039 $node->id of type $nodeType is not sending since $lastSend > /dev/null 2>&1 &");
+                Http::post('http://sms-api:5005/send-sms', [
+                    'phone' => '0557140049',
+                    'message' => $nodeType." not sending data since ".$lastSend,
+                ]);
             }
         }
     }
