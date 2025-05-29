@@ -21,6 +21,7 @@ services:
     container_name: php_app
     volumes:
       - ./src:/var/www/html/app
+      - ./sms-sender.py:/var/www/app/sms-sender.py
     expose:
       - "9000"
     networks:
