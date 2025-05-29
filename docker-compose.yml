@@ -1,4 +1,19 @@
 services:
+  sms-api:
+    build:
+      context: .
+      dockerfile: ./sms/Dockerfile
+    container_name: sms-api
+    ports:
+      - "5005:5005"
+    privileged: true
+    devices:
+      - "/dev/ttyS0:/dev/ttyS0"
+    volumes:
+      - /dev:/dev
+      - /sys:/sys
+    networks:
+      - app-network
   nginx:
     image: nginx:latest
     restart: unless-stopped
@@ -21,7 +36,6 @@ services:
     container_name: php_app
     volumes:
       - ./src:/var/www/html/app
-      - ./sms-sender.py:/var/www/app/sms-sender.py
     expose:
       - "9000"
     networks:
@@ -39,7 +53,6 @@ services:
     container_name: scheduler
     volumes:
       - ./src:/var/www/app
-      - ./sms-sender.py:/var/www/app/sms-sender.py
     command: ["php", "/var/www/app/artisan", "schedule:run"]
     networks:
       - app-network
