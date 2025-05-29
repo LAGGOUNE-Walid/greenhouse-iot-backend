@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\UploadStreamImageAction;
-use Illuminate\Http\JsonResponse;
+use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Actions\UploadStreamImageAction;
+use Illuminate\Database\Eloquent\Collection;
 
 class ImageController extends Controller
 {
     public function __construct(public UploadStreamImageAction $uploadStreamImageAction) {}
+
+
+
+    public function get(): Collection
+    {
+        return Image::orderByDesc('created_at')->get();
+    }
 
     /**
      * @group Image

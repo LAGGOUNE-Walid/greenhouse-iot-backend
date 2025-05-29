@@ -2,28 +2,31 @@
 
 namespace App\Services;
 
-use App\Models\Measurement;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
+use App\Models\Measurement;
 
 class GetAllMeasurementsServices
 {
-    public function get(int $intervalDays = 0): Collection
+    public function get(): array
     {
-        $query = Measurement::query();
+        // Get all measurements ordered by creation time
+        $rawData = Measurement::orderBy('created_at')->get();
 
-        return $query->get()
-            ->groupBy(fn ($item) => $item->created_at->format('Y-m-d'))
-            ->map(function ($measurementsByDate) {
-                return $measurementsByDate
-                    ->groupBy('measurement_type')
-                    ->map(function ($items) {
-                        return [
-                            'measurement_type_string' => $items->first()->measurement_type->name,
-                            'avg_measuremens' => round($items->avg('value'), 2),
-                        ];
-                    })
-                    ->values(); // convert to indexed array
-            });
+        // Group by measurement type and map to {x: timestamp_ms, y: value}
+        $grouped = $rawData->groupBy('measurement_type');
+
+        $result = [];
+        foreach ($grouped as $typeId => $items) {
+            $typeName = $items->first()->measurement_type->name;
+            $result[$typeName] = $items->map(function ($item) {
+                return [
+                    'x' => $item->created_at->getTimestamp() * 1000, // JS timestamps in ms
+                    'y' => round($item->value, 2),
+                ];
+            })->toArray();
+        }
+
+        return $result;
     }
 }

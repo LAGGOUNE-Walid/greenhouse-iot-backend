@@ -33,3 +33,4 @@ Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
     return response()->noContent();
 });
 Route::post('image', [ImageController::class, 'create']);
+Route::get('images', [ImageController::class, 'get']);

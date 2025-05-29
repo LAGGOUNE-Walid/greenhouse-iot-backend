@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Models\Image;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -40,6 +41,8 @@ class UploadStreamImageAction
             ], 500);
         }
         fclose($tempFile);
+
+        Image::create(['path' => $filePath]);
 
         return response()->json([
             'message' => 'Image uploaded successfully!',
