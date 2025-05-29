@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\Node;
+use Illuminate\Console\Command;
+
+class ListenForDeadNodes extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:listen-for-dead-nodes';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        $nodes = Node::with('lastMeasurement')->get();
+        foreach ($nodes as $node) {
+            $lastMeasurement = $node->lastMeasurement;
+            if ($lastMeasurement->created_at->diffInMinutes(now()) >= 60) { //1h
+                $lastSend = $lastMeasurement->created_at->format('Y-m-d H:i:s');
+                $nodeType = $node->type->name;
+                exec("python3 /app/scripts/sms-sender.py 0557140039 $node->id of type $nodeType is not sending since $lastSend > /dev/null 2>&1 &");
+            }
+        }
+    }
+}

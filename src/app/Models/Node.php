@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Enums\NodeType;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Node extends Model
 {
@@ -26,6 +27,11 @@ class Node extends Model
     public function measurements(): HasMany
     {
         return $this->hasMany(Measurement::class);
+    }
+
+    public function lastMeasurement(): HasOne
+    {
+        return $this->hasOne(Measurement::class)->latest();
     }
 
     public function batteryLevels(): HasMany

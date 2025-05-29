@@ -27,6 +27,23 @@ services:
       - app-network
     depends_on:
       - mosquitto-server
+  scheduler:
+    restart: unless-stopped
+    build:
+      args:
+        user: www-data
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    container_name: scheduler
+    volumes:
+      - ./src:/var/www/app
+      - ./sms-sender.py:/var/www/app/sms-sender.py
+    command: ["php", "/var/www/app/artisan", "schedule:run"]
+    networks:
+      - app-network
+    depends_on:
+      - mosquitto-server
   air-subs:
     restart: unless-stopped
     build:
