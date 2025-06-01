@@ -10,10 +10,11 @@ class GetAllMeasurementsServices
 {
     public function get(?string $date = null): array
     {
+        $timezone = 'Africa/Algiers'; // or whatever your local time is
         $query = Measurement::orderBy('created_at');
 
         if ($date) {
-            $date = Carbon::parse($date);
+            $date = Carbon::parse($date)->timezone($timezone);
             $query->whereDate('created_at', $date);
         }
 
@@ -27,11 +28,11 @@ class GetAllMeasurementsServices
         foreach ($grouped as $typeId => $items) {
             $typeName = $items->first()->measurement_type->name;
 
-            // Group by exact timestamp (milliseconds)
+            // Group by exact timestamp
             $byTimestamp = [];
 
             foreach ($items as $item) {
-                $timestamp = $item->created_at->getTimestamp() * 1000;
+                $timestamp = $item->created_at->timezone($timezone)->getTimestamp() * 1000;
 
                 if (!isset($byTimestamp[$timestamp])) {
                     $byTimestamp[$timestamp] = ['sum' => 0, 'count' => 0];
@@ -41,15 +42,15 @@ class GetAllMeasurementsServices
                 $byTimestamp[$timestamp]['count']++;
             }
 
-            // Now calculate average for each timestamp
+            // Average per timestamp
             $result[$typeName] = [];
 
             foreach ($byTimestamp as $timestamp => $data) {
-                $average = round($data['sum'] / $data['count'], 2);
-                $result[$typeName][] = ['x' => (int)$timestamp, 'y' => $average];
+                $avg = round($data['sum'] / $data['count'], 2);
+                $result[$typeName][] = ['x' => (int)$timestamp, 'y' => $avg];
             }
 
-            // Optional: sort by timestamp if needed
+            // Sort by x
             usort($result[$typeName], fn($a, $b) => $a['x'] <=> $b['x']);
         }
 
