@@ -59,18 +59,12 @@ class GetAllMeasurementsServices
                 }, array_keys($hourlyData), array_values($hourlyData));
             } else {
                 // Original behavior for all data
-                $result[$typeName] = collect($items)
-                    ->groupBy(function ($item) {
-                        // Group by exact timestamp in milliseconds
-                        return $item->created_at->getTimestamp() * 1000;
-                    })
-                    ->map(function ($group, $timestamp) {
-                        $avg = round($group->avg('value'), 2);
-                        return ['x' => $timestamp, 'y' => $avg];
-                    })
-                    ->sortBy('x') // optional, to keep the array ordered by time
-                    ->values()
-                    ->toArray();
+                $result[$typeName] = $items->map(function ($item) {
+                    return [
+                        'x' => $item->created_at->getTimestamp() * 1000,
+                        'y' => round($item->value, 2),
+                    ];
+                })->toArray();
             }
         }
 
