@@ -10,11 +10,10 @@ class GetAllMeasurementsServices
 {
     public function get(?string $date = null): array
     {
-        $timezone = 'Africa/Algiers'; // or whatever your local time is
         $query = Measurement::orderBy('created_at');
 
         if ($date) {
-            $date = Carbon::parse($date)->timezone($timezone);
+            $date = Carbon::parse($date);
             $query->whereDate('created_at', $date);
         }
 
@@ -24,34 +23,49 @@ class GetAllMeasurementsServices
         $grouped = $rawData->groupBy('measurement_type');
 
         $result = [];
-
         foreach ($grouped as $typeId => $items) {
             $typeName = $items->first()->measurement_type->name;
 
-            // Group by exact timestamp
-            $byTimestamp = [];
+            // Create hourly buckets for the selected day
+            $hourlyData = [];
 
-            foreach ($items as $item) {
-                $timestamp = $item->created_at->timezone($timezone)->getTimestamp() * 1000;
-
-                if (!isset($byTimestamp[$timestamp])) {
-                    $byTimestamp[$timestamp] = ['sum' => 0, 'count' => 0];
+            if ($date) {
+                // Initialize hourly buckets (0-23) with null values
+                for ($hour = 0; $hour < 24; $hour++) {
+                    $hourTimestamp = $date->copy()->setHour($hour)->startOfHour();
+                    $hourlyData[$hourTimestamp->getTimestamp() * 1000] = null;
                 }
 
-                $byTimestamp[$timestamp]['sum'] += $item->value;
-                $byTimestamp[$timestamp]['count']++;
+                // Fill in actual measurements
+                foreach ($items as $item) {
+                    $hour = $item->created_at->hour;
+                    $hourTimestamp = $item->created_at->copy()->setHour($hour)->startOfHour();
+                    $timestamp = $hourTimestamp->getTimestamp() * 1000;
+
+                    // Calculate average for this hour if multiple measurements exist
+                    if (!isset($hourlyData[$timestamp])) {
+                        $hourlyData[$timestamp] = 0;
+                        $count = 0;
+                    }
+
+                    $hourlyData[$timestamp] += $item->value;
+                    $count++;
+                    $hourlyData[$timestamp] = round($hourlyData[$timestamp] / $count, 2);
+                }
+
+                // Convert to array of points
+                $result[$typeName] = array_map(function ($timestamp, $value) {
+                    return ['x' => $timestamp, 'y' => $value];
+                }, array_keys($hourlyData), array_values($hourlyData));
+            } else {
+                // Original behavior for all data
+                $result[$typeName] = $items->map(function ($item) {
+                    return [
+                        'x' => $item->created_at->getTimestamp() * 1000,
+                        'y' => round($item->value, 2),
+                    ];
+                })->toArray();
             }
-
-            // Average per timestamp
-            $result[$typeName] = [];
-
-            foreach ($byTimestamp as $timestamp => $data) {
-                $avg = round($data['sum'] / $data['count'], 2);
-                $result[$typeName][] = ['x' => (int)$timestamp, 'y' => $avg];
-            }
-
-            // Sort by x
-            usort($result[$typeName], fn($a, $b) => $a['x'] <=> $b['x']);
         }
 
         return $result;
