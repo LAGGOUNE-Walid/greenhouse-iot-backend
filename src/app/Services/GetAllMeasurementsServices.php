@@ -66,7 +66,7 @@ class GetAllMeasurementsServices
                     })
                     ->map(function ($group, $timestamp) {
                         $avg = round($group->avg('value'), 2);
-                        return ['x' => (int)$timestamp, 'y' => $avg];
+                        return ['x' => $timestamp, 'y' => $avg];
                     })
                     ->sortBy('x') // optional, to keep the array ordered by time
                     ->values()
