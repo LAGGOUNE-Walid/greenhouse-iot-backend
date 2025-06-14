@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BatteryLevel;
 use App\Models\Measurement;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Node;
@@ -22,9 +23,22 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Node::factory()
-            ->has(Measurement::factory()->count(10))
-            ->count(10)
-            ->create();
+
+        if (Node::count() === 0) {
+            Node::factory()
+                ->has(Measurement::factory()->count(10))
+                ->has(BatteryLevel::factory()->count(1))
+                ->count(10)
+                ->create();
+        } else {
+            Node::all()->each(function ($node) {
+                Measurement::factory()->count(10)->create([
+                    'node_id' => $node->id,
+                ]);
+                BatteryLevel::factory()->count(1)->create([
+                    'node_id' => $node->id,
+                ]);
+            });
+        }
     }
 }

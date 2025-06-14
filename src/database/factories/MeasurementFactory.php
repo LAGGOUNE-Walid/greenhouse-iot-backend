@@ -18,10 +18,17 @@ class MeasurementFactory extends Factory
     public function definition(): array
     {
         $types = [MeasurementType::soil_moisture, MeasurementType::temperature, MeasurementType::humidity, MeasurementType::pressure];
-
+        $type = $types[array_rand($types)];
+        if ($type == MeasurementType::soil_moisture OR $type == MeasurementType::humidity) {
+            $value = rand(30, 100);
+        }elseif($type == MeasurementType::temperature) {
+            $value = rand(20, 50);   
+        }else {
+            $value = rand(900, 1030);
+        }
         return [
-            'measurement_type' => $types[array_rand($types)],
-            'value' => rand(0, 1000),
+            'measurement_type' => $type,
+            'value' => $value,
         ];
     }
 }

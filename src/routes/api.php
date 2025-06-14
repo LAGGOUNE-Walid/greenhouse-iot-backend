@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\MeasurementController;
-use App\Http\Controllers\NodeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NodeController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\BatteryController;
+use App\Http\Controllers\MeasurementController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -13,6 +14,7 @@ Route::get('/user', function (Request $request) {
 
 Route::resource('measurements', MeasurementController::class);
 Route::resource('nodes', NodeController::class);
+Route::resource('batteries', BatteryController::class);
 
 Route::get('measurements-export', [MeasurementController::class, 'export']);
 Route::get('measurements-table', [MeasurementController::class, 'all']);
