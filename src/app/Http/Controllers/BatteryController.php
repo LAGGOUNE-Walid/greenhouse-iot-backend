@@ -11,6 +11,6 @@ class BatteryController extends Controller
 {
     public function index(Request $request): BatteryLevelCollection
     {
-        return new BatteryLevelCollection(BatteryLevel::all());
+        return new BatteryLevelCollection(BatteryLevel::whereDate("created_at", ">=", now()->subMonth())->get());
     }
 }
